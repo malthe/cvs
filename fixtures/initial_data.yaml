@@ -1,0 +1,450 @@
+- model: core.route
+  pk: signup
+  fields:
+    name: Signup
+
+- model: core.route
+  pk: observations
+  fields:
+    name: Observations
+
+- model: core.route
+  pk: muac
+  fields:
+    name: Muac
+
+- model: core.route
+  pk: otp
+  fields:
+    name: OTP
+
+- model: core.route
+  pk: birth
+  fields:
+    name: Birth
+
+- model: core.route
+  pk: death
+  fields:
+    name: Death
+
+- model: core.route
+  pk: cure
+  fields:
+    name: Cure
+
+- model: stats.observationkind
+  pk: new_signup
+  fields:
+    name: New signup
+    group: registration
+
+- model: stats.groupkind
+  pk: hci
+  fields:
+    name: HCI
+
+- model: stats.groupkind
+  pk: hcii
+  fields:
+    name: HCII
+
+- model: stats.groupkind
+  pk: hciii
+  fields:
+    name: HCIII
+
+- model: stats.groupkind
+  pk: hciv
+  fields:
+    name: HCIV
+
+- model: stats.groupkind
+  pk: hospital
+  fields:
+    name: Hospital
+
+- model: stats.groupkind
+  pk: country
+  fields:
+    name: Country
+
+- model: stats.groupkind
+  pk: district
+  fields:
+    name: District
+
+- model: stats.groupkind
+  pk: sub_district
+  fields:
+    name: Sub-district
+
+- model: stats.groupkind
+  pk: county
+  fields:
+    name: County
+
+- model: stats.groupkind
+  pk: sub_county
+  fields:
+    name: Sub-county
+
+- model: stats.groupkind
+  pk: parish
+  fields:
+    name: Parish
+
+- model: stats.groupkind
+  pk: village
+  fields:
+    name: Village
+
+- model: stats.groupkind
+  pk: sub_village
+  fields:
+    name: Sub-village
+
+- model: stats.groupkind
+  pk: government
+  fields:
+    name: Government
+
+- model: stats.groupkind
+  pk: ministry
+  fields:
+    name: Ministry
+
+- model: stats.groupkind
+  pk: dho
+  fields:
+    name: District Health Office
+
+- model: cvs.healthrole
+  pk: vht
+  fields:
+      name: Village Health Team
+      keyword: VHT
+
+- model: cvs.healthrole
+  pk: pvht
+  fields:
+    name: Peer Village Health Team
+    keyword: PVHT
+
+- model: cvs.healthrole
+  pk: hno
+  fields:
+    name: Health Nutrition Officer
+    keyword: HNO
+
+- model: cvs.healthrole
+  pk: hso
+  fields:
+    name: Health Surveillance Officer
+    keyword: HSO
+
+- model: reporter.role
+  pk: vht
+  fields:
+      name: Village Health Team
+
+- model: reporter.role
+  pk: pvht
+  fields:
+    name: Peer Village Health Team
+
+- model: reporter.role
+  pk: hno
+  fields:
+    name: Health Nutrition Officer
+
+- model: reporter.role
+  pk: hso
+  fields:
+    name: Health Surveillance Officer
+
+- model: stats.reportkind
+  pk: birth
+  fields:
+    name: Birth
+
+- model: stats.reportkind
+  pk: death
+  fields:
+    name: Death
+
+- model: stats.reportkind
+  pk: muac
+  fields:
+    name: Muac
+
+- model: stats.reportkind
+  pk: otp
+  fields:
+    name: Outpatient
+
+- model: stats.reportkind
+  pk: epidemiological_observations
+  fields:
+    name: Epidemiology
+
+- model: stats.reportkind
+  pk: observations_at_home
+  fields:
+    name: Domestic health
+
+- model: stats.reportkind
+  pk: patient
+  fields:
+    name: Patient report
+
+- model: stats.observationkind
+  pk: death_female
+  fields:
+    name: Female
+    group: birth
+
+- model: stats.observationkind
+  pk: death_male
+  fields:
+    name: Male
+    group: birth
+
+- model: stats.observationkind
+  pk: birth_female
+  fields:
+    name: Female
+    group: birth
+
+- model: stats.observationkind
+  pk: birth_male
+  fields:
+    name: Male
+    group: birth
+
+- model: stats.observationkind
+  pk: birth_at_home
+  fields:
+    name: Home
+    group: birth
+    description: Occurred in the home.
+
+- model: stats.observationkind
+  pk: birth_at_clinic
+  fields:
+    name: Clinic
+    group: birth
+    description: Occurred at a private or minor clinic.
+
+- model: stats.observationkind
+  pk: birth_at_facility
+  fields:
+    name: Facility
+    group: birth
+    description: Occurred at a health facility.
+
+- model: stats.observationkind
+  pk: age
+  fields:
+    name: Age
+    aggregator: avg
+    renderer: timedelta
+    group: muac
+
+- model: stats.observationkind
+  pk: green_muac
+  fields:
+    name: Green
+    group: muac
+
+- model: stats.observationkind
+  pk: yellow_muac
+  fields:
+    name: Yellow
+    group: muac
+
+- model: stats.observationkind
+  pk: red_muac
+  fields:
+    name: Red
+    group: muac
+
+- model: stats.observationkind
+  pk: oedema
+  fields:
+    name: Oedema
+    group: muac
+
+- model: stats.observationkind
+  pk: epidemiological_observations_bd
+  fields:
+    name: Bloody diarrhea (Dysentery)
+    abbr: Bd
+    group: epidemiological_observations
+    priority: 10
+
+- model: stats.observationkind
+  pk: epidemiological_observations_ma
+  fields:
+    name: Malaria
+    abbr: Ma
+    group: epidemiological_observations
+    priority: 10
+
+- model: stats.observationkind
+  pk: epidemiological_observations_tb
+  fields:
+    name: Tuberculosis
+    abbr: Tb
+    group: epidemiological_observations
+    priority: 10
+
+- model: stats.observationkind
+  pk: epidemiological_observations_ab
+  fields:
+    name: Animal Bites
+    abbr: Ab
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_af
+  fields:
+    name: Acute Flaccid Paralysis (Polio)
+    abbr: Af
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_mg
+  fields:
+    name: Meningitis
+    abbr: Mg
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_me
+  fields:
+    name: Measles
+    abbr: Me
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_ch
+  fields:
+    name: Cholera
+    abbr: Ch
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_gw
+  fields:
+    name: Guinea Worm
+    abbr: Gw
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_nt
+  fields:
+    name: Neonatal Tetanus
+    abbr: Nt
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_yf
+  fields:
+    name: Yellow Fever
+    abbr: Yf
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_ot
+  fields:
+    name: Other
+    abbr: Other
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_pl
+  fields:
+    name: Plague
+    abbr: Pl
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_rb
+  fields:
+    name: Rabies
+    abbr: Ra
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_vf
+  fields:
+    name: Other Viral Hemorrhagic Fevers
+    abbr: Vf
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: epidemiological_observations_ei
+  fields:
+    name: Other Emerging Infectious Diseases
+    abbr: Ei
+    group: epidemiological_observations
+
+- model: stats.observationkind
+  pk: observations_at_home_total
+  fields:
+    name: Homesteads visited
+    group: observations_at_home
+
+- model: stats.observationkind
+  pk: observations_at_home_wa
+  fields:
+    name: Safe Drinking Water
+    abbr: Wa
+    group: observations_at_home
+
+- model: stats.observationkind
+  pk: observations_at_home_ha
+  fields:
+    name: Handwashing Facilities
+    abbr: Ha
+    group: observations_at_home
+
+- model: stats.observationkind
+  pk: observations_at_home_la
+  fields:
+    name: Latrines
+    abbr: La
+    group: observations_at_home
+
+- model: stats.observationkind
+  pk: observations_at_home_it
+  fields:
+    name: ITTNs/LLINs
+    abbr: It
+    group: observations_at_home
+    priority: 5
+
+- model: stats.observationkind
+  pk: registered_patient
+  fields:
+    name: Registered patient
+    group: patient
+
+- model: stats.observationkind
+  pk: unregistered_patient
+  fields:
+    name: Unregistered patient
+    group: patient
+
+- model: stats.observationkind
+  pk: opening_of_case
+  fields:
+    name: Cases closed
+    group: patient
+
+- model: stats.observationkind
+  pk: closing_of_case
+  fields:
+    name: Cases closed
+    group: patient
