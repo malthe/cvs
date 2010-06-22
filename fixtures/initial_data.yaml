@@ -169,6 +169,11 @@
     name: Birth
 
 - model: stats.reportkind
+  pk: cure
+  fields:
+    name: Cure
+
+- model: stats.reportkind
   pk: death
   fields:
     name: Death
