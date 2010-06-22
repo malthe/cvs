@@ -40,7 +40,7 @@ def on_save_report(sender=None, instance=None, **kwargs):
     except HealthReporter.DoesNotExist:
         return
 
-    if instance.location is not None or reporter.group is None:
+    if instance.group is not None or reporter.group is None:
         return
 
     instance.group = reporter.group
