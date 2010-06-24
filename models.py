@@ -24,30 +24,6 @@ BIRTH_PLACE_CHOICES = (
     ('FACILITY', 'Facility'),
     )
 
-def on_save_report(sender=None, instance=None, **kwargs):
-    if not issubclass(sender, Report):
-        return
-
-    if instance.source is None:
-        return
-
-    user = instance.source.message.user
-    if user is None:
-        return
-
-    try:
-        reporter = HealthReporter.objects.get(pk=user.pk)
-    except HealthReporter.DoesNotExist:
-        return
-
-    if instance.group is not None or reporter.group is None:
-        return
-
-    instance.group = reporter.group
-    instance.save()
-
-signals.post_save.connect(on_save_report, weak=True)
-
 class Facility(MP_Node):
     """HMIS health facility."""
 
