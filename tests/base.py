@@ -22,7 +22,7 @@ class Scenario(FormTestCase):
         request = Request(message=message)
         request.save()
 
-        report = Report(slug="test", source=request)
+        report = Report(slug="test", source=message)
         report.save()
 
         patient = Patient(

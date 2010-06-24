@@ -131,7 +131,7 @@ class Signup(Form):
             reporter = HealthReporter(pk=reporter.pk, name=reporter.name)
 
             Report.from_observations(
-                "registration", new_signup=1, group=group, source=self.request)
+                "registration", new_signup=1, group=group, source=self.request.message)
 
         reporter.facility = facility
         reporter.group = group
@@ -230,10 +230,10 @@ class Birth(Form):
             }
 
         Report.from_observations(
-            "birth", source=self.request, group=None, **observations)
+            "birth", source=self.request.message, group=None, **observations)
 
         birth = BirthReport(slug="birth", patient=patient,
-                            place=place, source=self.request)
+                            place=place, source=self.request.message)
         birth.save()
 
         if place == 'CLINIC':
@@ -352,7 +352,7 @@ class Death(PatientVisitation):
         is_male = bool(sex == 'M')
 
         Report.from_observations(
-            "death", source=self.request, group=None,
+            "death", source=self.request.message, group=None,
             death_male=is_male, death_female=not is_male)
 
         return u"We have recorded the death of %s." % \
@@ -376,12 +376,12 @@ class Death(PatientVisitation):
             case.save()
 
         Report.from_observations(
-            "death", source=self.request, group=None,
+            "death", source=self.request.message, group=None,
             death_male=death_male,
             death_female=death_female)
 
         Report.from_observations(
-            "patient", source=self.request,
+            "patient", source=self.request.message,
             closing_of_case=len(cases))
 
         for pk, patient in notifications.items():
@@ -419,7 +419,7 @@ class Cure(PatientVisitation):
             case.save()
 
         Report.from_observations(
-            "patient", source=self.request,
+            "patient", source=self.request.message,
             closing_of_case=len(cases))
 
         for pk, patient in notifications.items():
@@ -587,7 +587,7 @@ class Observations(Form):
             previous = None
 
         # create new report to contain these observations
-        report = Report(kind=kind, source=self.request)
+        report = Report(kind=kind, source=self.request.message)
         report.save()
 
         # if the report kind has support for an observation total,
@@ -791,7 +791,7 @@ class Muac(Form):
             category=category,
             patient=patient,
             oedema=oedema,
-            source=self.request)
+            source=self.request.message)
 
         report.save()
 
