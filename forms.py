@@ -799,7 +799,7 @@ class Muac(Form):
                 "Expected MUAC reading (either green, yellow or red), but "
                 "received %s." % "".join(remaining()))
 
-        if optional(pico.separator, None):
+        if optional(tri(pico.separator), None):
             if optional(partial(
                 pico.one_of_strings, 'oedema', 'odema', 'oe'), None):
                 result['oedema'] = True

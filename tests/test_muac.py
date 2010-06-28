@@ -21,6 +21,14 @@ class ParserTest(TestCase):
         from djangosms.core.router import FormatError
         self.assertRaises(FormatError, self._muac, "")
 
+    def test_oedema_no_comma(self):
+        self.assertEqual(self._muac("okumu john ,m, 2yr red oe"), {
+            'name': 'okumu john',
+            'sex': 'M',
+            'age': self._timedelta(days=2*365),
+            'category': u'R',
+            })
+
     def test_health_id(self):
         self.assertEqual(self._muac("abc1, red"), {
             'health_id': 'abc1',
