@@ -99,6 +99,7 @@ class Signup(Form):
             # groups that report to this facility
             policies = {}
             policy = None
+            group = None
 
             for policy in facility.policies.all().select_related():
                 policies[policy.group.name.upper()] = policy
