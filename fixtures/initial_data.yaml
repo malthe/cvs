@@ -207,24 +207,60 @@
   pk: death_female
   fields:
     name: Female
-    group: birth
+    group: death
 
 - model: stats.observationkind
   pk: death_male
   fields:
     name: Male
-    group: birth
+    group: death
+    
+- model: stats.observationkind
+  pk: death_under_five_total
+  fields:
+    name: Total Child Deaths
+    group: death
+
+- model: stats.observationkind
+  pk: death_under_month
+  fields:
+    name: Death under 28 days
+    group: death
+
+- model: stats.observationkind
+  pk: death_one_three_month
+  fields:
+    name: Death 28 days to 3 months
+    group: death
+
+- model: stats.observationkind
+  pk: death_three_twelve_month
+  fields:
+    name: Death 3 months to 12 months
+    group: death
+
+- model: stats.observationkind
+  pk: death_one_five_year
+  fields:
+    name: Death 1 year to 5 years
+    group: death
 
 - model: stats.observationkind
   pk: birth_female
   fields:
-    name: Female
+    name: Girls
     group: birth
 
 - model: stats.observationkind
   pk: birth_male
   fields:
-    name: Male
+    name: Boys
+    group: birth
+    
+- model: stats.observationkind
+  pk: birth_total
+  fields:
+    name: Total Births
     group: birth
 
 - model: stats.observationkind
@@ -278,6 +314,55 @@
   pk: oedema
   fields:
     name: Oedema
+    group: muac
+    priority: 10
+    
+- model: stats.observationkind
+  pk: green_muac_oedema
+  fields:
+    name: Green + Oe
+    group: muac
+    
+- model: stats.observationkind
+  pk: yellow_muac_oedema
+  fields:
+    name: Yellow + Oe
+    group: muac
+
+- model: stats.observationkind
+  pk: red_muac_oedema
+  fields:
+    name: Red Oe
+    group: muac    
+
+- model: stats.observationkind
+  pk: vht_cases
+  fields:
+    name: Cases submitted by VHT
+    group: muac
+
+- model: stats.observationkind
+  pk: facility_cases
+  fields:
+    name: Cases submitted by Health Facility
+    group: muac
+
+- model: stats.observationkind
+  pk: muac_cures
+  fields:
+    name: Cure
+    group: muac
+
+- model: stats.observationkind
+  pk: muac_deaths
+  fields:
+    name: Die
+    group: muac
+
+- model: stats.observationkind
+  pk: muac_referrals
+  fields:
+    name: Refer to ITC
     group: muac
 
 - model: stats.observationkind
@@ -453,3 +538,39 @@
   fields:
     name: Cases closed
     group: patient
+    
+- model: stats.observationkind
+  pk: messages_total_death
+  fields:
+    name: Death messages
+    group: messages
+
+- model: stats.observationkind
+  pk: messages_total_cure
+  fields:
+    name: Cure messages
+    group: messages
+
+- model: stats.observationkind
+  pk: messages_total_birth
+  fields:
+    name: Birth messages
+    group: messages
+    
+- model: stats.observationkind
+  pk: messages_total_epi
+  fields:
+    name: Epi messages
+    group: messages
+    
+- model: stats.observationkind
+  pk: messages_total_house
+  fields:
+    name: House visit messages
+    group: messages
+    
+- model: stats.observationkind
+  pk: messages_total_muac
+  fields:
+    name: Muac messages
+    group: messages
