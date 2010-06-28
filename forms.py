@@ -98,7 +98,7 @@ class Signup(Form):
             # get all (name, location) pairs of all child nodes of
             # groups that report to this facility
             policies = {}
-            policy = None
+            group = None
 
             for policy in facility.policies.all().select_related():
                 policies[policy.group.name.upper()] = policy
