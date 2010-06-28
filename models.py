@@ -65,7 +65,7 @@ class Patient(models.Model):
     @property
     def age(self):
         if self.birthdate is not None:
-            return datetime.datetime.utcnow() - self.birthdate
+            return datetime.datetime.utcnow() - self.birthdate.utcoffset()
 
     @property
     def label(self):
