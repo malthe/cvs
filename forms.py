@@ -218,7 +218,7 @@ class Birth(Form):
         return result
 
     def handle(self, name=None, sex=None, place=None):
-        Report.from_observations(slug='messages',group=None,
+        Report.from_observations(slug='messages',
             source=self.request.message,messages_total_birth=1)
         
         birthdate = self.request.message.time
@@ -235,7 +235,7 @@ class Birth(Form):
             }
 
         Report.from_observations(
-            "birth", source=self.request.message, group=None, **observations)
+            "birth", source=self.request.message, **observations)
 
         birth = BirthReport(slug="birth", patient=patient,
                             place=place, source=self.request.message)
@@ -354,13 +354,13 @@ class Death(PatientVisitation):
     report_kind = "death"
 
     def handle_unregistered(self, name, sex, birthdate):
-        Report.from_observations(slug='messages',group=None,
+        Report.from_observations(slug='messages',
             source=self.request.message,messages_total_death=1)
         
         is_male = bool(sex == 'M')
 
         Report.from_observations(
-            "death", source=self.request.message, group=None,
+            "death", source=self.request.message,
             death_male=is_male, death_female=not is_male)
 
         age = self.request.message.time - birthdate
@@ -375,14 +375,13 @@ class Death(PatientVisitation):
                 observations['death_three_twelve_month'] = 1
             else:
                 observations['death_one_five_year'] = 1
-            Report.from_observations("death", self.request.message, 
-                None, observations)
+            Report.from_observations("death", self.request.message, **observations)
 
         return u"We have recorded the death of %s." % \
                Patient(name=name, sex=sex, birthdate=birthdate).label
 
     def handle_registered(self, patients, cases, notifications):
-        Report.from_observations(slug='messages',group=None,
+        Report.from_observations(slug='messages',
             source=self.request.message,messages_total_death=1)
         
         death_male = 0
@@ -409,18 +408,16 @@ class Death(PatientVisitation):
                     observations['death_three_twelve_month'] = 1
                 else:
                     observations['death_one_five_year'] = 1
-                Report.from_observations("death", self.request.message, 
-                    None, observations)
+                Report.from_observations("death", self.request.message, **observations)
                 
-                Report.from_observations("muac", self.request.message,
-                    None, muac_deaths=1)
+                Report.from_observations("muac", self.request.message, muac_deaths=1)
 
         for case in cases:
             case.closed = self.request.message.time
             case.save()
 
         Report.from_observations(
-            "death", source=self.request.message, group=None,
+            "death", source=self.request.message,
             death_male=death_male,
             death_female=death_female)
 
@@ -632,7 +629,7 @@ class Observations(Form):
             Report.from_observations(slug='messages',group=None,
                 source=self.request.message,messages_total_epi=1)
         elif kind.slug == 'observations_at_home': 
-            Report.from_observations(slug='messages',group=None,
+            Report.from_observations(slug='messages',
                 source=self.request.message,messages_total_house=1)       
         
         if not observations:
@@ -819,14 +816,14 @@ class Muac(Form):
         
         user = Reporter.objects.filter(pk=request.user.pk)
         
-        Report.from_observations(slug='messages',group=None,
+        Report.from_observations(slug='messages',
             source=self.request.message,messages_total_muac=1)
         
         if user.role.slug == 'vht' or user.role.slug == 'pvht':
-            Report.from_observations('muac', group=None,
+            Report.from_observations('muac',
                 source=self.request.message, vht_cases=1)
         elif user.role.slug == 'hno' or user.role.slug == 'hso':
-            Report.from_observations('muac', group=None,
+            Report.from_observations('muac',
                 source=self.request.message, facility_cases=1)
         
         if health_id is None:
