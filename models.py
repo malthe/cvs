@@ -64,15 +64,13 @@ class Patient(models.Model):
 
     @property
     def age(self):
-        if self.birthdate is not None:
-            return datetime.datetime.utcnow() - self.birthdate.utcoffset()
+        return datetime.datetime.now(tz=self.birthdate.tzinfo) - self.birthdate
 
     @property
     def label(self):
         noun = 'male' if self.sex == 'M' else 'female'
 
         days = self.age.days
-
         if days > 365:
             age_string = "aged %d" % (days // 365)
         elif days > 30:
