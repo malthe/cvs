@@ -813,19 +813,19 @@ class Muac(Form):
 
     def handle(self, health_id=None, name=None, sex=None,
                age=None, category=None, reading=None, oedema=False):
-        
-        user = Reporter.objects.filter(pk=request.user.pk)
-        
-        Report.from_observations(slug='messages',
+        user = Reporter.objects.get(pk=self.request.message.user.pk)
+        Report.from_observations(
+            slug='messages',
             source=self.request.message,messages_total_muac=1)
-        
-        if user.role.slug == 'vht' or user.role.slug == 'pvht':
-            Report.from_observations('muac',
-                source=self.request.message, vht_cases=1)
-        elif user.role.slug == 'hno' or user.role.slug == 'hso':
-            Report.from_observations('muac',
-                source=self.request.message, facility_cases=1)
-        
+
+        for role in user.roles.all():
+            if user.role.slug == 'vht' or user.role.slug == 'pvht':
+                Report.from_observations(
+                    'muac', source=self.request.message, vht_cases=1)
+            elif user.role.slug == 'hno' or user.role.slug == 'hso':
+                Report.from_observations(
+                    'muac', source=self.request.message, facility_cases=1)
+
         if health_id is None:
             if isinstance(age, datetime.timedelta):
                 birthdate = self.request.message.time - age
