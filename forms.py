@@ -819,10 +819,10 @@ class Muac(Form):
             source=self.request.message,messages_total_muac=1)
 
         for role in user.roles.all():
-            if user.role.slug == 'vht' or user.role.slug == 'pvht':
+            if role.slug in ('vht', 'pvht'):
                 Report.from_observations(
                     'muac', source=self.request.message, vht_cases=1)
-            elif user.role.slug == 'hno' or user.role.slug == 'hso':
+            elif role.slug in ('hno', 'hso'):
                 Report.from_observations(
                     'muac', source=self.request.message, facility_cases=1)
 
