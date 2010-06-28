@@ -75,7 +75,7 @@ class Signup(Form):
 
         keyword = matches[0]
         result = {
-            'role': by_keyword[keyword],
+            'role': by_keyword[keyword.upper()],
             }
 
         try:
@@ -515,7 +515,7 @@ class Observations(Form):
         if keywords is None:
             keywords = cls.KEYWORDS
 
-        slug = keywords[keyword]
+        slug = keywords[keyword.lower()]
         kind = ReportKind.objects.get(slug=slug)
 
         observations = {}
