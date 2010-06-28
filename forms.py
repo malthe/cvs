@@ -217,7 +217,10 @@ class Birth(Form):
         return result
 
     def handle(self, name=None, sex=None, place=None):
-        birthdate = datetime.datetime.now()
+        Report.from_observations(slug='messages',group=None,
+            source=self.request.message,messages_total_birth=1)
+        
+        birthdate = self.request.message.time
 
         patient = Patient(
             name=name, sex=sex, birthdate=birthdate,
@@ -226,7 +229,8 @@ class Birth(Form):
 
         observations = {
             'birth_male' if sex == 'M' else 'birth_female': 1,
-            "birth_at_%s" % place.lower(): 1
+            "birth_at_%s" % place.lower(): 1,
+            'birth_total': 1
             }
 
         Report.from_observations(
@@ -310,7 +314,7 @@ class PatientVisitation(Form):
 
         else:
             if isinstance(age, datetime.timedelta):
-                birthdate = datetime.datetime.now() - age
+                birthdate = self.request.message.time - age
             else:
                 birthdate = age
 
@@ -349,16 +353,37 @@ class Death(PatientVisitation):
     report_kind = "death"
 
     def handle_unregistered(self, name, sex, birthdate):
+        Report.from_observations(slug='messages',group=None,
+            source=self.request.message,messages_total_death=1)
+        
         is_male = bool(sex == 'M')
 
         Report.from_observations(
             "death", source=self.request.message, group=None,
             death_male=is_male, death_female=not is_male)
 
+        age = self.request.message.time - birthdate
+        days = age.days
+        if (days < 1826): # it's a child death if 5 years or under
+            observations = {'death_under_five_total':1}
+            if (days < 28):
+                observations['death_under_month'] = 1
+            elif (days < 90):
+                observations['death_one_three_month'] = 1
+            elif (days < 365):
+                observations['death_three_twelve_month'] = 1
+            else:
+                observations['death_one_five_year'] = 1
+            Report.from_observations("death", self.request.message, 
+                None, observations)
+
         return u"We have recorded the death of %s." % \
                Patient(name=name, sex=sex, birthdate=birthdate).label
 
     def handle_registered(self, patients, cases, notifications):
+        Report.from_observations(slug='messages',group=None,
+            source=self.request.message,messages_total_death=1)
+        
         death_male = 0
         death_female = 0
 
@@ -370,6 +395,24 @@ class Death(PatientVisitation):
                 death_male += 1
             else:
                 death_female += 1
+            
+            age = self.request.message.time - patient.birthdate
+            days = age.days
+            if (days < 1826): # it's a child death if 5 years or under
+                observations = {'death_under_five_total':1}
+                if (days < 28):
+                    observations['death_under_month'] = 1
+                elif (days < 90):
+                    observations['death_one_three_month'] = 1
+                elif (days < 365):
+                    observations['death_three_twelve_month'] = 1
+                else:
+                    observations['death_one_five_year'] = 1
+                Report.from_observations("death", self.request.message, 
+                    None, observations)
+                
+                Report.from_observations("muac", self.request.message,
+                    None, muac_deaths=1)
 
         for case in cases:
             case.closed = self.request.message.time
@@ -410,10 +453,16 @@ class Cure(PatientVisitation):
     report_kind = "cure"
 
     def handle_unregistered(self, name, sex, birthdate):
+        Report.from_observations(slug='messages',group=None,
+            source=self.request.message,messages_total_cure=1)
+        
         return u"We have recorded the curing of %s." % \
                Patient(name=name, sex=sex, birthdate=birthdate).label
 
     def handle_registered(self, patients, cases, notifications):
+        Report.from_observations(slug='messages',group=None,
+            source=self.request.message,messages_total_cure=1)
+      
         for case in cases:
             case.closed = self.request.message.time
             case.save()
@@ -422,6 +471,9 @@ class Cure(PatientVisitation):
             "patient", source=self.request.message,
             closing_of_case=len(cases))
 
+        Report.from_observations('muac', source=self.request.message,
+            group=None, muac_cures=1)
+        
         for pk, patient in notifications.items():
             reporter = Reporter.objects.get(pk=pk)
 
@@ -575,6 +627,13 @@ class Observations(Form):
         return result
 
     def handle(self, kind=None, total=None, observations={}):
+        if kind.slug == 'epidemiological_observations':
+            Report.from_observations(slug='messages',group=None,
+                source=self.request.message,messages_total_epi=1)
+        elif kind.slug == 'observations_at_home': 
+            Report.from_observations(slug='messages',group=None,
+                source=self.request.message,messages_total_house=1)       
+        
         if not observations:
             return u"Please include one or more reports."
 
@@ -756,9 +815,22 @@ class Muac(Form):
 
     def handle(self, health_id=None, name=None, sex=None,
                age=None, category=None, reading=None, oedema=False):
+        
+        user = Reporter.objects.filter(pk=request.user.pk)
+        
+        Report.from_observations(slug='messages',group=None,
+            source=self.request.message,messages_total_muac=1)
+        
+        if user.role.slug == 'vht' or user.role.slug == 'pvht':
+            Report.from_observations('muac', group=None,
+                source=self.request.message, vht_cases=1)
+        elif user.role.slug == 'hno' or user.role.slug == 'hso':
+            Report.from_observations('muac', group=None,
+                source=self.request.message, facility_cases=1)
+        
         if health_id is None:
             if isinstance(age, datetime.timedelta):
-                birthdate = datetime.datetime.now() - age
+                birthdate = self.request.message.time - age
             else:
                 birthdate = age
 
@@ -798,16 +870,25 @@ class Muac(Form):
         report.observations.create(slug="oedema", value=int(oedema))
         report.observations.create(
             slug="age",
-            value=(datetime.datetime.now()-patient.birthdate).days)
-        report.observations.create(
-            slug={'G': 'green_muac',
-                  'Y': 'yellow_muac',
-                  'R': 'red_muac'}[category],
-            value=1)
+            value=(self.request.message.time-patient.birthdate).days)
+        if not oedema:
+            report.observations.create(
+                slug={'G': 'green_muac',
+                      'Y': 'yellow_muac',
+                      'R': 'red_muac'}[category],
+                      value=1)
+        else:
+            report.observations.create(
+                slug={'G': 'green_muac_oedema',
+                      'Y': 'yellow_muac_oedema',
+                      'R': 'red_muac_oedema'}[category],
+                      value=1)            
 
         pronoun = 'his' if patient.sex == 'M' else 'her'
 
         if category != 'G' or oedema:
+            Report.from_observations('muac', group=None,
+                source=self.request.message, muac_referrals=1)
             case = Case(patient=patient, report=report)
             while case.id is None:
                 try:
