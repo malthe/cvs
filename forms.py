@@ -99,6 +99,7 @@ class Signup(Form):
             # groups that report to this facility
             policies = {}
             policy = None
+            group = None
 
             for policy in facility.policies.all().select_related():
                 policies[policy.group.name.upper()] = policy
@@ -332,7 +333,7 @@ class PatientVisitation(Form):
             if case.report.source is None: # pragma: NOCOVER
                 continue
             # check if we need to notify the original case reporter
-            case_reported_by = case.report.source.message.user
+            case_reported_by = case.report.source.user
             if  case_reported_by != self.user:
                 notifications[case_reported_by.pk] = case.patient
 
@@ -639,7 +640,7 @@ class Observations(Form):
 
         # determine whether there's any previous reports for this user
         previous_reports = Report.objects.filter(
-            kind=kind, source__message__connection__user=self.user).all()
+            kind=kind, source__connection__user=self.user).all()
         if previous_reports:
             previous = previous_reports[0]
         else:

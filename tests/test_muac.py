@@ -216,7 +216,7 @@ class FormTest(FormTestCase):
             from cvs.models import NutritionReport
             report = NutritionReport.objects.all()[0]
             self.assertEqual(report.category, category)
-            self.assertEqual(report.source, request)
+            self.assertEqual(report.source.pk, request.message.pk)
 
     def test_patient_age_is_datetime(self):
         self.register_default_user()

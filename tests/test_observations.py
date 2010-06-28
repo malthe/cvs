@@ -93,7 +93,7 @@ class FormTest(HealthTestCase, FormTestCase):
         from djangosms.stats.models import Report
         report = Report.objects.get(kind__slug="agg")
         self.assertEqual(report.observations.count(), 1)
-        self.assertEqual(report.source.message.user, request.message.user)
+        self.assertEqual(report.source.user, request.message.user)
         reply = request.responses.get()
         self.assertTrue('malaria 5' in reply.text)
 
@@ -103,7 +103,7 @@ class FormTest(HealthTestCase, FormTestCase):
         from djangosms.stats.models import Report
         report = Report.objects.get(kind__slug="agg")
         self.assertEqual(report.observations.count(), 2)
-        self.assertEqual(report.source.message.user, request.message.user)
+        self.assertEqual(report.source.user, request.message.user)
         self.assertEqual(report.observations.get(
             kind__slug__endswith="_total").value, 10)
         reply = request.responses.get()
