@@ -26,6 +26,7 @@ class ParserTest(TestCase):
             'name': 'okumu john',
             'sex': 'M',
             'age': self._timedelta(days=2*365),
+            'oedema': True,
             'category': u'R',
             })
 
