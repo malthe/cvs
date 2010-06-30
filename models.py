@@ -1,6 +1,14 @@
 import datetime
+import time
 import difflib
+import logging
 
+from urllib2 import Request as HttpRequest
+from urllib2 import urlopen
+from urllib2 import HTTPError
+from urllib import urlencode
+
+from django.conf import settings
 from django.db import models
 from django.db.models import signals
 
@@ -10,6 +18,10 @@ from djangosms.stats.models import Report
 from djangosms.stats.models import Group
 from djangosms.stats.models import GroupKind
 from djangosms.core.models import User
+from djangosms.core.models import Request
+
+from djangosms.ui.sandbox.views import graduate
+from djangosms.ui.sandbox.views import GraduateFailed
 
 from treebeard.mp_tree import MP_Node
 
@@ -23,6 +35,44 @@ BIRTH_PLACE_CHOICES = (
     ('CLINIC', 'Clinic'),
     ('FACILITY', 'Facility'),
     )
+
+def on_graduate(sender=None, reporter=None, **kwargs):
+    requests = []
+    try:
+        reg_req = Request.objects.filter(
+            erroneous=False, route__slug='register', 
+            message__connection__user__pk=reporter.pk).latest('message__time')
+        try:
+            signup_req = Request.objects.filter(
+                erroneous=False, route__slug='signup',
+                message__connection__user__pk=reporter.pk).latest('message__time')
+        except Request.DoesNotExist:
+            pass
+        else:
+            requests.append(signup_req)
+
+    except Request.DoesNotExist:
+        pass
+    else:
+        requests.append(reg_req)
+                
+    for request in requests:
+        try:
+            urlopen(HttpRequest(settings.LIVE_URL,
+             urlencode({
+                'from':request.message.connection,
+                'receiver':'6767',
+                'text':request.message.text,
+                'timestamp':int(time.mktime(request.message.time.timetuple())),
+                'username':settings.LIVE_USERNAME,
+                'password':settings.LIVE_PASSWORD,
+             })
+             ))
+        except HTTPError, exc:
+            logging.warn(exc)
+            raise GraduateFailed()
+
+graduate.connect(on_graduate)
 
 class Facility(MP_Node):
     """HMIS health facility."""
