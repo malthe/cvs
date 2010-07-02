@@ -513,6 +513,35 @@ class Otp(PatientVisitation):
         return "Thank you for reporting the OTP treatment of %s." % \
                ", ".join(patient.label for patient in patients)
 
+
+class Itp(PatientVisitation):
+    """Mark a case as seen in outpatient therapeutic program care.
+
+    Format::
+
+      [<tracking_id>]+
+
+    Separate multiple entries with space and/or comma. Tracking IDs
+    are case-insensitive.
+    """
+
+    report_kind = "itp"
+
+    def handle_unregistered(self, name, sex, birthdate):
+        return u"We have recorded the ITP visit of %s." % \
+               Patient(name=name, sex=sex, birthdate=birthdate).label
+
+    def handle_registered(self, patients, cases, notifications):
+        for pk, patient in notifications.items():
+            reporter = Reporter.objects.get(pk=pk)
+            self.request.respond(
+                reporter.most_recent_connection,
+                u"This is to inform you that " \
+                "Your patient, %s, has received ITP treatment." % patient.label)
+
+        return "Thank you for reporting the ITP treatment of %s." % \
+               ", ".join(patient.label for patient in patients)
+
 class Observations(Form):
     """Form to allow multiple observation input.
 

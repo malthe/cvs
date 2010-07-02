@@ -17,6 +17,11 @@
   pk: otp
   fields:
     name: OTP
+    
+- model: core.route
+  pk: itp
+  fields:
+    name: ITP
 
 - model: core.route
   pk: birth
@@ -187,6 +192,11 @@
   pk: otp
   fields:
     name: Outpatient
+
+- model: stats.reportkind
+  pk: itp
+  fields:
+    name: Inpatient
 
 - model: stats.reportkind
   pk: epidemiological_observations
@@ -526,6 +536,18 @@
   fields:
     name: Unregistered patient
     group: patient
+    
+- model: stats.observationkind
+  pk: registered_patient
+  fields:
+    name: Registered outpatient
+    group: otp
+
+- model: stats.observationkind
+  pk: registered_patient
+  fields:
+    name: Registered inpatient
+    group: itp
 
 - model: stats.observationkind
   pk: opening_of_case
